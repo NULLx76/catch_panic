@@ -103,7 +103,8 @@ pub fn catch_panic(attr: TokenStream, item: TokenStream) -> TokenStream {
     TokenStream::from(quote! {
         #(#attrs)*
         #vis #sig {
-            ::catch_panic::handler::__catch_panic(#first_arg_name, #default_value, #handler, move || {
+            let mut __catch_panic_env = unsafe { #first_arg_name.unsafe_clone() };
+            ::catch_panic::handler::__catch_panic(__catch_panic_env, #default_value, #handler, move || {
                 #block
             })
         }
